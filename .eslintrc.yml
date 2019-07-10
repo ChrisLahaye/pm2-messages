@@ -1,0 +1,16 @@
+root: true
+
+parser: '@typescript-eslint/parser'
+
+env:
+  node: true
+
+extends:
+  - 'plugin:@typescript-eslint/recommended'
+
+rules:
+  '@typescript-eslint/indent':
+    - 2
+    - 2
+  '@typescript-eslint/no-explicit-any':
+    - 0

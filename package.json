@@ -1,6 +1,6 @@
 {
   "name": "pm2-messages",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Library to retrieve messages within a PM2 cluster.",
   "repository": {
     "type": "git",

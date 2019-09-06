@@ -65,7 +65,7 @@ export const getMessages = async function getMessages(topic: string, timeout: nu
         });
 
         instances.forEach((instance): void => {
-          if (instance.pm_id) {
+          if (typeof instance.pm_id === 'number') {
             pm2.sendDataToProcessId(instance.pm_id, packet, (err: Error): void => err && done(err));
           }
         });

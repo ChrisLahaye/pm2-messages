@@ -22,7 +22,7 @@ process.on('message', async (packet: Packet): Promise<void> => {
  * Retrieves messages from sibling instances.
  */
 export const getMessages = async function getMessages(topic: string, timeout: number = 1000): Promise<any[]> {
-  const promise = new Promise(async (resolve: (messages: any[]) => void, reject): Promise<void> => {
+  return new Promise(async (resolve: (messages: any[]) => void, reject): Promise<void> => {
     assert.equal(typeof handlers[topic], 'function');
 
     const packet = { topic, data: { targetInstanceId: instanceId } };
@@ -73,13 +73,7 @@ export const getMessages = async function getMessages(topic: string, timeout: nu
         listener.then((): void => done(), done);
       });
     });
-  });
-
-  try {
-    return promise;
-  } finally {
-    pm2.disconnect();
-  }
+  }).finally((): void => pm2.disconnect());
 };
 
 /**

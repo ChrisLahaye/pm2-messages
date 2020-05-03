@@ -1,15 +1,18 @@
 {
   "name": "pm2-messages",
-  "version": "1.0.8",
-  "description": "Library to retrieve messages within a PM2 cluster.",
+  "version": "2.0.0",
+  "description": "Package to request messages from processes managed by pm2.",
   "repository": {
     "type": "git",
     "url": "github:ChrisLahaye/pm2-messages"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
   "scripts": {
-    "prepublish": "tsc"
+    "prepare": "tsc"
   },
   "author": "Chris Lahaye",
   "license": "MIT",
@@ -17,6 +20,7 @@
     "pm2": "^3.5.0"
   },
   "devDependencies": {
+    "@types/node": "^13.13.4",
     "@typescript-eslint/eslint-plugin": "^1.11.0",
     "@typescript-eslint/parser": "^1.11.0",
     "eslint": "^5.0.0",

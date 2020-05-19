@@ -1,14 +1,14 @@
 import * as assert from 'assert';
 import * as pm2 from 'pm2';
 
-import { GetMessagesOptions, MessageHandler, RequestPacket, ResponsePacket } from './types';
+import { Handler, Options, RequestPacket, ResponsePacket } from './types';
 
-export { GetMessagesOptions, MessageHandler } from './types';
+export { Handler, Options } from './types';
 
 /**
  * Attached message handles.
  */
-const handlers: { [key: string]: MessageHandler } = {};
+const handlers: { [key: string]: Handler } = {};
 
 /**
  * The pid of the current process for the pm2 God daemon process.
@@ -43,7 +43,7 @@ export const getMessages = function getMessages<T = any>(
   {
     filter = (process): boolean => process.name === myName,
     timeout = 1000,
-  }: GetMessagesOptions = {}
+  }: Options = {}
 ): Promise<T[]> {
   assert.equal(typeof handlers[topic], 'function', `Handler for ${topic} not attached or not a function`);
 
@@ -119,7 +119,7 @@ export const getMessages = function getMessages<T = any>(
 /**
  * Attaches a message handler for the given topic.
  */
-export const onMessage = function onMessage(topic: string, handler: MessageHandler): void {
+export const onMessage = function onMessage(topic: string, handler: Handler): void {
   handlers[topic] = handler;
 };
 

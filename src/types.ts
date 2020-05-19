@@ -3,12 +3,12 @@ import { ProcessDescription } from 'pm2';
 /**
  * Handles a message request by returning the requested message.
  */
-export type MessageHandler = (data?: any) => any;
+export type Handler = (data?: any) => any;
 
 /**
  * Options for the `getMessages` function.
  */
-export interface GetMessagesOptions {
+export interface Options {
   /**
    * Filter function to select the processes managed by pm2 from which messages need to be requested.
    * Defaults to processes with same name as the active process.

@@ -58,5 +58,6 @@ const somethingArr = await pm2mes.getMessages(
 ```
 
 ### Configuration
-- *filter*: Filter function to select the processes managed by pm2 from which messages need to be requested. Defaults to processes with same name as the active process, i.e. `(process): boolean => process.name === process.env.name`.
+- *filter*: Filter function to select the processes managed by PM2 from which messages need to be requested. Defaults to processes with same name as the active process, i.e. `(process): boolean => process.name === process.env.name`.
+- *includeSelfIfUnmanaged*: Indicates whether messages need to be requested from the active process when it is not managed by PM2 (see [#4](https://github.com/ChrisLahaye/pm2-messages/issues/4)). Defaults to false.
 - *timeout*: Timeout in milliseconds (ms). Default to 1000 ms.

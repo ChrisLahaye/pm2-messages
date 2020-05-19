@@ -28,6 +28,7 @@ export const getMessages = function getMessages<T = any>(
   data?: any,
   {
     filter = (process): boolean => process.name === myName,
+    includeSelfIfUnmanaged = false,
     timeout = 1000,
   }: Options = {}
 ): Promise<T[]> {
@@ -49,30 +50,32 @@ export const getMessages = function getMessages<T = any>(
         pm2.list((err, processes): void => {
           if (err) return reject(err);
 
-          const targets: number[] = [];
           const messages: T[] = [];
-          const promises: Promise<void>[] = [];
+          const resolvers: Promise<void>[] = [];
+
+          const resolverBusTargets: number[] = [];
+          const resolverSelf = async (): Promise<void> => { messages.push(await handlers[topic](data)); };
+
+          if (includeSelfIfUnmanaged && Number.isNaN(myPmId)) resolvers.push(resolverSelf());
 
           for (const process of processes) {
-            if (!filter(process)) continue;
-
-            if (process.pm_id === myPmId) {
-              promises.push(
-                Promise.resolve()
-                  .then((): T | Promise<T> => handlers[topic](data))
-                  .then((message): void => { messages.push(message) })
-              );
-            } else if (typeof process.pm_id === 'number') {
-              targets.push(process.pm_id);
+            if (filter(process)) {
+              if (process.pm_id === myPmId) {
+                resolvers.push(resolverSelf());
+              } else if (typeof process.pm_id === 'number') {
+                resolverBusTargets.push(process.pm_id);
+              }
             }
           }
 
-          if (targets.length) {
-            promises.push(new Promise((resolve, reject): void => {
+          console.info(resolvers.length, resolverBusTargets.length);
+
+          if (resolverBusTargets.length) {
+            resolvers.push(new Promise((resolve, reject): void => {
               pm2.launchBus((err, bus): void => {
                 if (err) return reject(err);
 
-                let pending = targets.length;
+                let pending = resolverBusTargets.length;
 
                 bus.on(`process:${myPmId}`, ({ data }: ResponsePacket<T>): void => {
                   messages.push(data);
@@ -83,14 +86,14 @@ export const getMessages = function getMessages<T = any>(
 
                 const request: RequestPacket = { topic, data: { targetInstanceId: myPmId, data } };
 
-                targets.forEach((pmId): void => {
+                resolverBusTargets.forEach((pmId): void => {
                   pm2.sendDataToProcessId(pmId, request, (err: Error): void => err && reject(err));
                 });
               });
             }));
           }
 
-          Promise.all(promises)
+          Promise.all(resolvers)
             .then((): void => resolve(messages))
             .catch(reject);
         });

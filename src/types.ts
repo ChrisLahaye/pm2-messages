@@ -4,10 +4,16 @@ export type Handler = (data?: any) => any;
 
 export interface Options {
   /**
-   * Function to select the processes managed by pm2 from which messages need to be requested.
+   * Filter function to select the processes managed by PM2 from which messages need to be requested.
    * Defaults to processes with same name as the active process.
    */
   filter?: (process: ProcessDescription) => boolean;
+
+  /**
+   * Indicates whether messages need to be requested from the active process when it is not managed by PM2.
+   * Defaults to false.
+   */
+  includeSelfIfUnmanaged?: boolean;
 
   /**
    * Timeout in milliseconds (ms).

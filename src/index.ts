@@ -1,20 +1,9 @@
 import * as assert from 'assert';
 import * as pm2 from 'pm2';
 
-/**
- * Handles a message request by returning the requested message.
- */
-export type MessageHandler = (data?: any) => any;
+import { GetMessagesOptions, MessageHandler, RequestPacket, ResponsePacket } from './types';
 
-/**
- * Packet used to request messages. Sent to processes managed by pm2, using the pm2 bus.
- */
-interface RequestPacket { topic: string; data: { targetInstanceId: number; data?: any } };
-
-/**
- * Packet used to reply the requested message. Sent to the requesting process managed by pm2, using the Node.js IPC channel.
- */
-interface ResponsePacket<T> { type: string; data: T };
+export { GetMessagesOptions, MessageHandler } from './types';
 
 /**
  * Attached message handles.
@@ -44,23 +33,6 @@ process.on('message', async ({ topic, data: { targetInstanceId, data } }: Reques
     process.send(response);
   }
 });
-
-/**
- * Options for the `getMessages` function.
- */
-export interface GetMessagesOptions {
-  /**
-   * Filter function to select the processes managed by pm2 from which messages need to be requested.
-   * Defaults to processes with same name as the active process.
-   */
-  filter?: (process: pm2.ProcessDescription) => boolean;
-
-  /**
-   * Timeout in milliseconds (ms).
-   * Defaults to 1000 ms.
-   */
-  timeout?: number;
-}
 
 /**
  * Requests messages from processes managed by pm2.

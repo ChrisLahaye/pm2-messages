@@ -5,24 +5,10 @@ import { Handler, Options, RequestPacket, ResponsePacket } from './types';
 
 export { Handler, Options } from './types';
 
-/**
- * Attached message handles.
- */
 const handlers: { [key: string]: Handler } = {};
-
-/**
- * The pid of the current process for the pm2 God daemon process.
- */
 const myPmId = Number(process.env.pm_id);
-
-/**
- * The name of the current process given in the original start command.
- */
 const myName = process.env.name;
 
-/**
- * Handles a request packet.
- */
 process.on('message', async ({ topic, data: { targetInstanceId, data } }: RequestPacket): Promise<void> => {
   if (typeof handlers[topic] === 'function' && process.send) {
     const response: ResponsePacket<any> = {
@@ -117,7 +103,7 @@ export const getMessages = function getMessages<T = any>(
 };
 
 /**
- * Attaches a message handler for the given topic.
+ * Attaches a handler for the given topic.
  */
 export const onMessage = function onMessage(topic: string, handler: Handler): void {
   handlers[topic] = handler;

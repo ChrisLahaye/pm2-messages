@@ -32,8 +32,6 @@ export const getMessages = function getMessages<T = any>(
     timeout = 1000,
   }: Options = {}
 ): Promise<T[]> {
-  assert.equal(typeof handlers[topic], 'function', `Handler for ${topic} not attached or not a function`);
-
   return new Promise<T[]>((resolve, reject): void => {
     const timer = setTimeout((): void => reject(new Error(`${topic} timed out`)), timeout);
     const done = function done(err: Error | null, messages: T[]): void {

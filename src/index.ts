@@ -66,8 +66,6 @@ export const getMessages = function getMessages<T = any>(
             }
           }
 
-          console.info(resolvers.length, resolverBusTargets.length);
-
           if (resolverBusTargets.length) {
             resolvers.push(new Promise((resolve, reject): void => {
               pm2.launchBus((err, bus): void => {

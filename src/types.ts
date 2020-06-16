@@ -24,4 +24,4 @@ export interface Options {
 
 export interface RequestPacket { topic: string; data: { targetInstanceId: number; data?: any } };
 
-export interface ResponsePacket<T> { type: string; data: T };
+export interface ResponsePacket<T> { type: string; data: { instanceId: number; message: T } };

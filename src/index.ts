@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import * as pm2 from 'pm2';
 
 import { Handler, Options, RequestPacket, ResponsePacket } from './types';
@@ -13,7 +12,7 @@ process.on('message', async ({ topic, data: { targetInstanceId, data } }: Reques
   if (typeof handlers[topic] === 'function' && process.send) {
     const response: ResponsePacket<any> = {
       type: `process:${targetInstanceId}`,
-      data: await handlers[topic](data),
+      data: { instanceId: myPmId, message: await handlers[topic](data) },
     };
 
     process.send(response);
@@ -71,13 +70,14 @@ export const getMessages = function getMessages<T = any>(
               pm2.launchBus((err, bus): void => {
                 if (err) return reject(err);
 
-                let pending = resolverBusTargets.length;
+                const pendingBusTargets = new Set(resolverBusTargets);
 
-                bus.on(`process:${myPmId}`, ({ data }: ResponsePacket<T>): void => {
-                  messages.push(data);
-                  pending -= 1;
+                bus.on(`process:${myPmId}`, ({ data : { instanceId, message } }: ResponsePacket<T>): void => {
+                  if (pendingBusTargets.delete(instanceId)) {
+                    messages.push(message);
 
-                  if (!pending) resolve();
+                    if (!pendingBusTargets.size) resolve();
+                  }
                 });
 
                 const request: RequestPacket = { topic, data: { targetInstanceId: myPmId, data } };

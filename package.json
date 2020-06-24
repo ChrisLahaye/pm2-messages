@@ -17,13 +17,13 @@
   "author": "Chris Lahaye",
   "license": "MIT",
   "dependencies": {
-    "pm2": "^3.5.0"
+    "pm2": "^4.4.0"
   },
   "devDependencies": {
-    "@types/node": "^13.13.4",
-    "@typescript-eslint/eslint-plugin": "^1.11.0",
-    "@typescript-eslint/parser": "^1.11.0",
-    "eslint": "^5.0.0",
+    "@types/node": "^14.0.14",
+    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/parser": "^3.4.0",
+    "eslint": "^7.3.1",
     "eslint-plugin-import": "^2.18.0",
     "typescript": "^3.5.3"
   }

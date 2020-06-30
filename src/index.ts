@@ -76,7 +76,7 @@ export const getMessages = function getMessages<T = any>(
   }: Options = {}
 ): Promise<T[]> {
   return new Promise<T[]>((resolve, reject): void => {
-    assert.ok(isConnected, 'not connected');
+    assert.ok(isConnected(), 'not connected');
 
     const timer = setTimeout((): void => reject(new Error(`${topic} timed out`)), timeout);
     const done = function done(err: Error | null, messages: T[]): void {

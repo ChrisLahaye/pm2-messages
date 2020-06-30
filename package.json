@@ -1,6 +1,6 @@
 {
   "name": "pm2-messages",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Package to request messages from processes managed by pm2.",
   "repository": {
     "type": "git",

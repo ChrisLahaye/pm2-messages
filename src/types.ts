@@ -1,4 +1,4 @@
-import { ProcessDescription } from 'pm2';
+import { ProcessDescription } from "pm2";
 
 export type Handler = (data?: any) => any;
 
@@ -22,6 +22,12 @@ export interface Options {
   timeout?: number;
 }
 
-export interface RequestPacket { topic: string; data: { targetInstanceId: number; data?: any } };
+export interface RequestPacket {
+  topic: string;
+  data: { targetInstanceId: number; requestId: string; data?: any };
+}
 
-export interface ResponsePacket<T> { type: string; data: { instanceId: number; message: T } };
+export interface ResponsePacket<T> {
+  type: string;
+  data: { instanceId: number; message: T; requestId: string };
+}

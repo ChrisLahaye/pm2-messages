@@ -11,7 +11,7 @@ const myName = process.env.name;
 const myPmId = Number(process.env.pm_id);
 
 let myBus: any;
-const myBusListeners: Record<string, ((instanceId: number, message: any) => void) | null> = {};
+const myBusListeners: Record<string, (instanceId: number, message: any) => void> = {};
 
 process.on('message', async ({ topic, data: { targetInstanceId, requestId, data } }: RequestPacket): Promise<void> => {
   if (typeof handlers[topic] === 'function' && process.send) {
@@ -124,7 +124,7 @@ export const getMessages = function getMessages<T = any>(
                 messages.push(message);
 
                 if (!pendingBusTargets.size) {
-                  myBusListeners[requestId] = null;
+                  delete myBusListeners[requestId];
 
                   resolve();
                 }

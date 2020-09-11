@@ -84,9 +84,12 @@ export const getMessages = function getMessages<T = any>(
   return new Promise<T[]>((resolve, reject): void => {
     assert.ok(isConnected(), 'not connected');
 
+    const requestId = uuidv4();
     const timer = setTimeout((): void => reject(new Error(`${topic} timed out`)), timeout);
     const done = function done(err: Error | null, messages: T[]): void {
       clearTimeout(timer);
+
+      delete myBusListeners[requestId];
 
       if (err) reject(err);
       else resolve(messages);
@@ -117,17 +120,12 @@ export const getMessages = function getMessages<T = any>(
         if (resolverBusTargets.length) {
           resolvers.push(new Promise((resolve, reject): void => {
             const pendingBusTargets = new Set(resolverBusTargets);
-            const requestId = uuidv4();
 
             myBusListeners[requestId] = (instanceId, message) => {
               if (pendingBusTargets.delete(instanceId)) {
                 messages.push(message);
 
-                if (!pendingBusTargets.size) {
-                  delete myBusListeners[requestId];
-
-                  resolve();
-                }
+                if (!pendingBusTargets.size) resolve();
               }
             };
 

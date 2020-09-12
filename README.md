@@ -1,4 +1,8 @@
-# PM2 messages
+> Library to retrieve messages within a PM2 cluster
+
+[![npm](https://img.shields.io/npm/dm/pm2-messages.svg)](https://www.npmjs.com/package/pm2-messages)
+[![npm](https://img.shields.io/npm/v/pm2-messages.svg)](https://www.npmjs.com/package/pm2-messages)
+
 This package provides a communication interface to retrieve messages of processes managed by pm2. It can be used to aggregate Prometheus metrics such that the aggregated registry represents cluster metrics.
 
 ## Installation

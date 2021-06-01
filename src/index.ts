@@ -13,11 +13,16 @@ const myPmId = Number(process.env.pm_id);
 let myBus: any;
 const myBusListeners: Record<string, (instanceId: number, message: any) => void> = {};
 
-process.on('message', async ({ topic, data: { targetInstanceId, requestId, data } }: RequestPacket): Promise<void> => {
+process.on('message', async (requestPacket: RequestPacket): Promise<void> => {
+  if (!requestPacket.topic) {
+    return;
+  }
+
+  const { topic, data: { targetInstanceId, requestId, data } } = requestPacket;
   if (typeof handlers[topic] === 'function' && process.send) {
     const response: ResponsePacket<any> = {
       type: `process:${targetInstanceId}`,
-      data: { instanceId: myPmId, requestId, message: await handlers[topic](data) },
+      data: {instanceId: myPmId, requestId, message: await handlers[topic](data)},
     };
 
     process.send(response);
